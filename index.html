@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataSettings Ios Free Fire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .card {
+            background: #1e1e1e;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 28px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #0f9dff;
+        }
+        
+        .btn {
+            background: #0f9dff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #0080ff;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .log {
+            background: #252525;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 18px;
+            height: 140px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #cccccc;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        #overlay.active {
+            opacity: 1;
+        }
+        
+        #dashboard {
+            display: none;
+        }
+        
+        .dashboard-card {
+            background: #1e1e1e;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 24px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0f9dff;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .info-label {
+            color: #aaaaaa;
+        }
+        
+        .info-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        
+        .toggle-group {
+            margin: 20px 0;
+        }
+        
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .toggle-label {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 46px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #0f9dff;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .status-message {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .status-active {
+            background: rgba(15, 157, 255, 0.1);
+            color: #0f9dff;
+            opacity: 1;
+        }
+        
+        .status-inactive {
+            background: rgba(255, 255, 255, 0.1);
+            color: #888;
+            opacity: 1;
+        }
+        
+        /* Config Section */
+        .config-section {
+            margin-top: 30px;
+        }
+        
+        .config-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .config-btn {
+            flex: 1;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .config-btn:hover {
+            background: #444;
+        }
+        
+        .config-btn.primary {
+            background: #0f9dff;
+        }
+        
+        .config-btn.primary:hover {
+            background: #0080ff;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #0f9dff;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1100;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay"></div>
+    
+    <div class="container">
+        <div id="mainCard" class="card">
+            <h1 class="title">DataSettings Ios</h1>
+            <button id="startBtn" class="btn">
+                <i class="fas fa-play"></i>
+                Start Reading Device
+            </button>
+            <div id="log" class="log hidden"></div>
+        </div>
+        
+        <div id="dashboard">
+            <div class="dashboard-card">
+                <h2 class="section-title">Device Information</h2>
+                
+                <div class="info-item">
+                    <span class="info-label">Device:</span>
+                    <span class="info-value" id="devicePlatform"></span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Browser:</span>
+                    <span class="info-value" id="browserInfo"></span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Language:</span>
+                    <span class="info-value" id="language"></span>
+                </div>
+                
+                <h2 class="section-title" style="margin-top: 24px;">Features</h2>
+                
+                <div class="toggle-group">
+                    <div class="toggle-row">
+                        <span class="toggle-label">DRAG HS 89%</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="feature-toggle" data-name="Drag HS">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="toggle-row">
+                        <span class="toggle-label">ONE TAP HS 77%</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="feature-toggle" data-name="OneTap HS">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="toggle-row">
+                        <span class="toggle-label">REGEXIT</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="feature-toggle" data-name="Regexit">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="statusMessage" class="status-message"></div>
+                
+                <!-- Config Section -->
+                <div class="config-section">
+                    <h2 class="section-title">Configuration</h2>
+                    
+                    <div class="config-buttons">
+                        <button class="config-btn" id="importBtn">
+                            <i class="fas fa-download"></i>
+                            Import
+                        </button>
+                        <button class="config-btn primary" id="exportBtn">
+                            <i class="fas fa-upload"></i>
+                            Export
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="fileInput" accept=".json">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const logDiv = document.getElementById("log");
+        const overlay = document.getElementById("overlay");
+        const mainCard = document.getElementById("mainCard");
+        const dashboard = document.getElementById("dashboard");
+        const statusMessage = document.getElementById("statusMessage");
+        const notification = document.getElementById("notification");
+        const notificationText = document.getElementById("notificationText");
+        const fileInput = document.getElementById("fileInput");
+        const importBtn = document.getElementById("importBtn");
+        const exportBtn = document.getElementById("exportBtn");
+        
+        const steps = [
+            "Initializing exploit...",
+            "Exploiting device info...",
+            "Bypassing ios systems...",
+            "Mounting rootfs...",
+            "Installing activator...",
+            "Applying patches...",
+            "Respringing..."
+        ];
+        
+        // Check if already completed
+        if (localStorage.getItem("completed") === "true") {
+            showDashboard();
+        }
+        
+        startBtn.addEventListener("click", () => {
+            startBtn.classList.add("hidden");
+            logDiv.classList.remove("hidden");
+            
+            let stepIndex = 0;
+            const interval = setInterval(() => {
+                logDiv.innerHTML += steps[stepIndex] + "<br>";
+                logDiv.scrollTop = logDiv.scrollHeight;
+                stepIndex++;
+                
+                if (stepIndex >= steps.length) {
+                    clearInterval(interval);
+                    overlay.classList.add("active");
+                    
+                    setTimeout(() => {
+                        overlay.classList.remove("active");
+                        showDashboard();
+                        localStorage.setItem("completed", "true");
+                    }, 2000);
+                }
+            }, 1000);
+        });
+        
+        function showDashboard() {
+            mainCard.style.display = "none";
+            dashboard.style.display = "block";
+            displayDeviceInfo();
+        }
+        
+        function displayDeviceInfo() {
+            const devicePlatform = navigator.platform;
+            const userAgent = navigator.userAgent;
+            const language = navigator.language;
+            
+            document.getElementById("devicePlatform").textContent = devicePlatform;
+            document.getElementById("browserInfo").textContent = userAgent.split(" ")[0];
+            document.getElementById("language").textContent = language;
+        }
+        
+        document.querySelectorAll(".feature-toggle").forEach(toggle => {
+            toggle.addEventListener("change", function() {
+                const featureName = this.dataset.name;
+                const isChecked = this.checked;
+                
+                if (isChecked) {
+                    showStatus(`${featureName} activated`, true);
+                } else {
+                    showStatus(`${featureName} deactivated`, false);
+                }
+            });
+        });
+        
+        function showStatus(message, isActive) {
+            statusMessage.className = `status-message ${isActive ? 'status-active' : 'status-inactive'}`;
+            statusMessage.textContent = message;
+        }
+        
+        // Import/Export Functionality
+        importBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+        
+        exportBtn.addEventListener("click", () => {
+            exportConfig();
+        });
+        
+        fileInput.addEventListener("change", handleFileSelect);
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.type !== "application/json") {
+                showNotification("Please select a JSON file", "error");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    applyConfig(config);
+                    showNotification("Configuration imported successfully!");
+                } catch (error) {
+                    showNotification("Error parsing configuration file", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function exportConfig() {
+            const config = getConfig();
+            const dataStr = JSON.stringify(config, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "data-settings-config.json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showNotification("Configuration exported successfully!");
+        }
+        
+        function getConfig() {
+            const features = {};
+            document.querySelectorAll(".feature-toggle").forEach(toggle => {
+                features[toggle.dataset.name] = toggle.checked;
+            });
+            
+            return {
+                timestamp: new Date().toISOString(),
+                features: features,
+                deviceInfo: {
+                    platform: navigator.platform,
+                    browser: navigator.userAgent.split(" ")[0],
+                    language: navigator.language
+                }
+            };
+        }
+        
+        function applyConfig(config) {
+            if (config.features) {
+                Object.keys(config.features).forEach(featureName => {
+                    const toggle = document.querySelector(`[data-name="${featureName}"]`);
+                    if (toggle) {
+                        toggle.checked = config.features[featureName];
+                    }
+                });
+            }
+        }
+        
+        function showNotification(message, type = "success") {
+            notificationText.textContent = message;
+            notification.className = `notification ${type === "error" ? "error" : ""}`;
+            notification.classList.add("show");
+            
+            setTimeout(() => {
+                notification.classList.remove("show");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
